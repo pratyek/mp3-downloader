@@ -6,8 +6,9 @@ import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
+console.log("rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmMDg3OWM2NHAxMA@musical-ghost-60539.upstash.io:6379");
 // Set up Redis connection for BullMQ
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisUrl = "rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmMDg3OWM2NHAxMA@musical-ghost-60539.upstash.io:6379" || 'redis://localhost:6379';
 const redisConnection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
 
 // Set up MongoDB connection
