@@ -12,12 +12,17 @@ let client = new MongoClient(uri);
 
 // Helper function to get the MongoDB collection
 async function getDownloadCollection() {
-  if (!client.isConnected || !client.isConnected()) {
-    await client.connect();
+  try {
+    if (!client.topology || !client.topology.isConnected()) {
+      await client.connect();
+    }
+    return client.db('youtube-downloader').collection('downloads');
+  } catch (error) {
+    console.error("❌ MongoDB Connection Failed:", error);
+    process.exit(1); // Exit worker on error
   }
-  const db = client.db('youtube-downloader');
-  return db.collection('downloads');
 }
+
 
 // Check if a video already exists (completed) in the database
 async function checkVideoExists(url, format) {

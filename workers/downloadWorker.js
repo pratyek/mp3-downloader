@@ -72,7 +72,7 @@ const worker = new Worker(
 
     // Return a promise that resolves when the download is finished
     return new Promise((resolve, reject) => {
-      const downloadProcess = spawn('yt-dlp', args);
+      const downloadProcess = spawn('/opt/homebrew/bin/yt-dlp', args);
       let stderrBuffer = '';
 
       downloadProcess.stdout.on('data', async (data) => {

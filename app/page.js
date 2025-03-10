@@ -413,13 +413,13 @@ export default function Home() {
             <div className="container mx-auto text-center">
               <p className="mb-4 font-bold text-3xl">Developed By</p>
               <div className="flex justify-center space-x-6">
-                <a className="hover:bg-gray-700 transition" href="https://twitter.com/yourprofile" target="_blank" rel="noopener noreferrer">
+                <a className="hover:bg-gray-700 transition" href="https://x.com/pratyek_" target="_blank" rel="noopener noreferrer">
                   <FaTwitter className="h-10 w-10 m-3 text-blue-400 text-xl" />
                 </a>
-                <a className="hover:bg-gray-700 transition" href="https://github.com/yourprofile" target="_blank" rel="noopener noreferrer">
+                <a className="hover:bg-gray-700 transition" href="https://github.com/pratyek" target="_blank" rel="noopener noreferrer">
                   <FaGithub className="h-10 w-10 m-3  text-gray-300 text-xl" />
                 </a>
-                <a className="hover:bg-gray-700 transition" href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer">
+                <a className="hover:bg-gray-700 transition" href="https://www.linkedin.com/in/pratyek-thumula-2a62b4293/" target="_blank" rel="noopener noreferrer">
                   <FaLinkedin className="h-10 w-10 m-3  text-blue-600 text-xl" />
                 </a>
               </div>

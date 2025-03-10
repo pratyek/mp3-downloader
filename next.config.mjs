@@ -1,8 +1,13 @@
-// --- next.config.js ---
-export const reactStrictMode = true;
-export const env = {
-  MONGODB_URI: process.env.MONGODB_URI,
-};
-export const api = {
-  responseLimit: false,
-};// --- next.config.js ---
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/videos/:path*',
+        destination: '/api/videos/stream/:path*',
+      },
+    ]
+  },
+}
+
+export default nextConfig
