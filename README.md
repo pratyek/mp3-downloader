@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# YouTube Downloader
 
-## Getting Started
+A scalable Next.js YouTube Downloader with multilingual support, built using BullMQ, Redis, MongoDB, and react-i18next. This project allows users to download full YouTube videos, extract clips, and download thumbnails in various formats. It also supports multiple languages including English, Spanish, Hindi, Telugu, Tamil, Bengali, Marathi, French, and Chinese.
 
-First, run the development server:
+## Features
+
+- **Multiple Formats:** Download videos in formats like MP4, MP3, MOV, MKV, WEBM, and FLV.
+- **Clip Extraction:** Specify start and end times to download specific clips from videos.
+- **Thumbnail Download:** Download high-quality thumbnails from YouTube videos.
+- **Multilingual Support:** User interface available in nine languages.
+- **Scalable Architecture:** Uses BullMQ (with Redis) for job queuing and real-time progress tracking.
+- **Persistent Storage:** Uses MongoDB to store download metadata and progress.
+- **Modern UI:** Built with Next.js and styled using Tailwind CSS, inspired by [ssyoutube.com](https://ssyoutube.com/en789Jb/).
+
+## Prerequisites
+
+- **Node.js** (v14 or above is recommended)
+- **npm** or **yarn**
+- **MongoDB** (local or cloud instance)
+- **Redis** (local or cloud instance)
+
+## Installation
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone <YOUR_REPOSITORY_URL>
+   cd mp3-downloader
+   ```
+
+2.**Install Dependencies:**
+
+```bash
+npm install
+```
+or
+```bash
+yarn install
+```
+
+## Configuration
+ - Create a .env.local file in the root of your project and add the following variables:
+
+```env
+MONGODB_URI=mongodb://localhost:27017/youtube-downloader
+REDIS_URL=redis://localhost:6379
+```
+Adjust the URIs as needed for your environment.
+
+## **Running the Application**
+1. Start the Next.js Server
+Start the development server with:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+or
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+yarn dev
+```
+Access the application at http://localhost:3000.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+2. Start the Worker Process
+In a separate terminal window, start the BullMQ worker:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+node workers/downloadWorker.js
+```
+The worker listens for download jobs from the queue and handles processing with yt-dlp.
 
-## Learn More
+## **Project Structure**
+ - app/
+   - Contains your Next.js pages, API routes (download, thumbnail, etc.), and components.
 
-To learn more about Next.js, take a look at the following resources:
+ - workers/
+   - Contains the BullMQ worker (downloadWorker.js) that processes download jobs.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ - lib/queue.js
+   - Initializes the BullMQ queue using Redis.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+ - i18n.js
+   - Configures react-i18next with translations for multiple languages.
 
-## Deploy on Vercel
+- styles/
+  - Contains global CSS and Tailwind CSS configuration files.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## **How to Use**
+1.**Select Language:**
+ - Use the language dropdown in the header to switch between supported languages.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2.**Download Video:**
+ - Enter the YouTube URL in the provided field.
+ - Select the desired video format.
+ - Optionally, choose to download a specific clip by providing start and end times.
+ - Click the "Download" button to enqueue the download job.
+
+3.**Monitor Progress:**
+ - Watch the progress bar update in real time. Once the download is complete, you’ll see options to download the video file or its thumbnail.
+
+4.**Reset/Start New Download:**
+ - Click "Cancel" to reset the current download state and start over.
+
+## Customization
+### Styling:
+ - The project uses Tailwind CSS for styling. Customize the classes or add your own styles as needed.
+
+### Translations:
+ - Update or extend the translations in i18n.js to adjust language support or add new languages.
+
+## Contributing
+ - Contributions are welcome! Feel free to open issues or submit pull requests for enhancements or bug fixes.
+
+
+
+
+
+
+
