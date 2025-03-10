@@ -7,22 +7,17 @@ import fs from 'fs';
 import path from 'path';
 
 // Database connection
-const uri = 'mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority' || 'mongodb://localhost:27017/youtube-downloader';
+const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/youtube-downloader';
 let client = new MongoClient(uri);
 
 // Helper function to get the MongoDB collection
 async function getDownloadCollection() {
-  try {
-    if (!client.topology || !client.topology.isConnected()) {
-      await client.connect();
-    }
-    return client.db('youtube-downloader').collection('downloads');
-  } catch (error) {
-    console.error("❌ MongoDB Connection Failed:", error);
-    process.exit(1); // Exit worker on error
+  if (!client.isConnected || !client.isConnected()) {
+    await client.connect();
   }
+  const db = client.db('youtube-downloader');
+  return db.collection('downloads');
 }
-
 
 // Check if a video already exists (completed) in the database
 async function checkVideoExists(url, format) {
@@ -133,7 +128,7 @@ export async function GET(req) {
     const download = await downloads.findOne({ downloadId });
     
     if (!download) {
-      console.error(`Download record not found for ID: ${downloadId}`);
+      console.error("Download record not found for ID: ${downloadId}");
       return NextResponse.json({ error: 'Download not found' }, { status: 404 });
     }
     
@@ -149,4 +144,3 @@ export async function GET(req) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
