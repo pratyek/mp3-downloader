@@ -5,7 +5,16 @@ import { MongoClient } from 'mongodb';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import express from 'express';
 
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Worker is running.');
+});
+
+app.listen(PORT);
 console.log("rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmMDg3OWM2NHAxMA@musical-ghost-60539.upstash.io:6379");
 // Set up Redis connection for BullMQ
 const redisUrl = "rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmMDg3OWM2NHAxMA@musical-ghost-60539.upstash.io:6379" || 'redis://localhost:6379';
