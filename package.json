@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "worker": "node workers/downloadWorker.js"
+    "worker": "node workers/downloadWorker.js",
+    "postinstall": "apt-get update && apt-get install -y yt-dlp" 
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.8.0",

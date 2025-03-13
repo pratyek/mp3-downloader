@@ -15,7 +15,7 @@ app.listen(PORT);
 const redisUrl = 'rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmMDg3OWM2NHAxMA@musical-ghost-60539.upstash.io:6379' || "redis://localhost:6379";
 const redisConnection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
 
-// 🔹 MongoDB Connection
+
 const mongoUri = 'mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority' || "mongodb://localhost:27017/youtube-downloader";
 const mongoClient = new MongoClient(mongoUri);
 
