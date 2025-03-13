@@ -6,8 +6,10 @@ import { downloadQueue } from '../../../lib/queue'; // Ensure this file exports 
 import fs from 'fs';
 import path from 'path';
 
+
 // Database connection
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/youtube-downloader';
+console.log(process.env.MONGODB_URI)
+const uri = "mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority" || 'mongodb://localhost:27017/youtube-downloader';
 let client = new MongoClient(uri);
 
 // Helper function to get the MongoDB collection

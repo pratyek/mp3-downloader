@@ -21,7 +21,7 @@ const redisUrl = "rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmM
 const redisConnection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
 
 // Set up MongoDB connection
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/youtube-downloader';
+const mongoUri = 'mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority' || 'mongodb://localhost:27017/youtube-downloader';
 const mongoClient = new MongoClient(mongoUri);
 
 async function getDownloadCollection() {

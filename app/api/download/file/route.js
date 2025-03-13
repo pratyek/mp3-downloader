@@ -4,7 +4,7 @@ import path from 'path';
 import { MongoClient } from 'mongodb';
 
 // Database connection
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/youtube-downloader';
+const uri = "mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority" || 'mongodb://localhost:27017/youtube-downloader';
 let client = new MongoClient(uri);
 
 // Helper function to get database collection
