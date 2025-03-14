@@ -18,7 +18,6 @@ const redisConnection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
 
 const mongoUri = 'mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority' || "mongodb://localhost:27017/youtube-downloader";
 const mongoClient = new MongoClient(mongoUri);
-
 async function getDownloadCollection() {
   if (!mongoClient.topology || mongoClient.topology.s.state !== "connected") {
     await mongoClient.connect();
