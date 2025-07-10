@@ -1,25 +1,10 @@
 // app/api/download/route.js
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
-import { MongoClient } from 'mongodb';
-import { downloadQueue } from '../../../lib/queue'; // Ensure this file exports a BullMQ queue instance
+import { getDownloadCollection } from '../../../lib/database.js';
+import { downloadQueue } from '../../../lib/queue.js';
 import fs from 'fs';
 import path from 'path';
-
-
-// Database connection
-console.log(process.env.MONGODB_URI)
-const uri = "mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority" || 'mongodb://localhost:27017/youtube-downloader';
-let client = new MongoClient(uri);
-
-// Helper function to get the MongoDB collection
-async function getDownloadCollection() {
-  if (!client.isConnected || !client.isConnected()) {
-    await client.connect();
-  }
-  const db = client.db('youtube-downloader');
-  return db.collection('downloads');
-}
 
 // Check if a video already exists (completed) in the database
 async function checkVideoExists(url, format) {

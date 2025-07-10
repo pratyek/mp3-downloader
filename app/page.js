@@ -3,21 +3,27 @@
 import { FaTwitter, FaGithub, FaLinkedin } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import './styles/globals.css';
+
+// Available formats with quality options
+const formats = [
+  { value: 'bestvideo[height<=1080]+bestaudio/best[height<=1080]', label: '1080p (HD)' },
+  { value: 'bestvideo[height<=720]+bestaudio/best[height<=720]', label: '720p (HD)' },
+  { value: 'bestvideo[height<=480]+bestaudio/best[height<=480]', label: '480p (SD)' },
+  { value: 'best', label: 'Auto (Best Available)' },
+  { value: 'mp3', label: 'Audio Only (MP3)' }
+];
 
 export default function Home() {
   const { t, i18n } = useTranslation();
 
   // States for the download tool
   const [url, setUrl] = useState('');
-  
-  const [format, setFormat] = useState('mp4');
+  const [format, setFormat] = useState(formats[0].value);
   const [isClip, setIsClip] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [downloadId, setDownloadId] = useState(null);
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState('');
   const [error, setError] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadReady, setDownloadReady] = useState(false);
@@ -34,9 +40,6 @@ export default function Home() {
     { code: 'es', label: 'Español' },
     { code: 'zh', label: '中文' },
   ];
-
-  // Available formats
-  const formats = ['mp4', 'mp3', 'mov', 'mkv', 'webm', 'flv'];
 
   // On page load, check for an ongoing download
   useEffect(() => {
@@ -57,7 +60,7 @@ export default function Home() {
       if (!response.ok) throw new Error('Failed to fetch progress');
       const data = await response.json();
       setProgress(data.progress || 0);
-      setStatus(data.status || 'waiting');
+      
       if (data.status === 'completed') {
         setDownloading(false);
         setDownloadReady(true);
@@ -94,12 +97,11 @@ export default function Home() {
     setDownloadReady(false);
     setDownloading(true);
     setProgress(0);
-    setStatus('starting');
 
     try {
       const downloadData = {
         url,
-        format,
+        format, // pass the yt-dlp format string
         startTime: isClip ? startTime : null,
         endTime: isClip ? endTime : null,
       };
@@ -129,12 +131,19 @@ export default function Home() {
   };
 
   // Reset all states
-  const handleReset = () => {
+  const handleReset = async () => {
+    if (downloadId) {
+      // Call backend to delete the file and DB record
+      try {
+        await fetch(`/api/download/delete?downloadId=${downloadId}`);
+      } catch (e) {
+        // Ignore errors
+      }
+    }
     localStorage.removeItem('currentDownloadId');
     localStorage.removeItem('currentVideoUrl');
     setDownloadId(null);
     setProgress(0);
-    setStatus('');
     setError(null);
     setDownloading(false);
     setDownloadReady(false);
@@ -237,8 +246,8 @@ export default function Home() {
                       className=" p-4 text-gray-800 font-bold border rounded-md focus:ring-2 focus:ring-gray-500 transition"
                     >
                       {formats.map((fmt) => (
-                        <option key={fmt} value={fmt}>
-                          {fmt.toUpperCase()}
+                        <option key={fmt.value} value={fmt.value}>
+                          {fmt.label}
                         </option>
                       ))}
                     </select>
@@ -303,8 +312,8 @@ export default function Home() {
                 {/* Progress Bar */}
                 <div className="w-full bg-transparent rounded-full h-5">
                   <div
-                    className="bg-white h-5 rounded-full flex items-center justify-end pr-2 text-xs text-white"
-                    style={{ width: `${Math.max(progress, 5)}%` }}
+                    className="bg-white h-5 rounded-full flex items-center justify-end pr-2 text-xs text-white transition-all duration-300"
+                    style={{ width: `${progress}%` }}
                   >
                     {downloading}
                   </div>

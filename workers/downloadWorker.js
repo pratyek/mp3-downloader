@@ -1,29 +1,15 @@
 import { Worker } from "bullmq";
-import IORedis from "ioredis";
-import { MongoClient } from "mongodb";
+import { connection as redisConnection } from "../lib/redis.js";
+import { getDownloadCollection } from "../lib/database.js";
 import { spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import express from "express";
 
 const app = express();
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.WORKER_PORT || 5050;
 app.get("/", (req, res) => res.send("Worker is running."));
 app.listen(PORT);
-
-// 🔹 Set up Redis connection
-const redisUrl = 'rediss://default:Aex7AAIjcDFhZDlhNzdhOWJiODM0MWE5OGY4MDBiMDFmMDg3OWM2NHAxMA@musical-ghost-60539.upstash.io:6379' || "redis://localhost:6379";
-const redisConnection = new IORedis(redisUrl, { maxRetriesPerRequest: null });
-
-
-const mongoUri = 'mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority' || "mongodb://localhost:27017/youtube-downloader";
-const mongoClient = new MongoClient(mongoUri);
-async function getDownloadCollection() {
-  if (!mongoClient.topology || mongoClient.topology.s.state !== "connected") {
-    await mongoClient.connect();
-  }
-  return mongoClient.db("youtube-downloader").collection("downloads");
-}
 
 // 🔹 Helper function to update MongoDB progress
 async function updateDownloadRecord(downloadId, updateFields) {
@@ -57,7 +43,7 @@ const worker = new Worker(
     const outputPath = path.join(downloadsDir, outputFilename);
 
     // 🔹 Build yt-dlp arguments
-    const args = ["--verbose", "--newline", "--progress", "--no-warnings", "-f", "best", "-o", outputPath];
+    const args = ["--verbose", "--newline", "--progress", "--no-warnings", "-f", format, "-o", outputPath];
     if (startTime && endTime) {
       args.push("--download-sections", `*${startTime}-${endTime}`);
     }
@@ -72,8 +58,13 @@ const worker = new Worker(
       // 🔹 Capture progress updates
       downloadProcess.stdout.on("data", async (data) => {
         const output = data.toString();
-        console.log(`yt-dlp stdout: ${output.trim()}`);
-
+        // Print every line for debugging
+        output.split("\n").forEach(line => {
+          if (line.trim()) {
+            console.log(`[yt-dlp] ${line.trim()}`);
+          }
+        });
+        // Try to match progress percentage in each line
         const match = output.match(/(\d+(?:\.\d+)?)%/);
         if (match && match[1]) {
           const progress = parseFloat(match[1]);

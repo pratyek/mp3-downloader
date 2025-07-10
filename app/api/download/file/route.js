@@ -1,18 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { MongoClient } from 'mongodb';
-
-// Database connection
-const uri = "mongodb+srv://pratyekpk3:pratyek@cluster0.7hlp9.mongodb.net/mp3-mp4-downloader?retryWrites=true&w=majority" || 'mongodb://localhost:27017/youtube-downloader';
-let client = new MongoClient(uri);
-
-// Helper function to get database collection
-async function getDownloadCollection() {
-  await client.connect();
-  const db = client.db('youtube-downloader');
-  return db.collection('downloads');
-}
+import { getDownloadCollection } from '../../../../lib/database.js';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
