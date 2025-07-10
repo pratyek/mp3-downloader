@@ -22,10 +22,6 @@ RUN npm install
 COPY lib/ ./lib/
 COPY workers/ ./workers/
 COPY config.js ./
-COPY cookies/ ./cookies/
-
-# Debug: Check if cookies were copied
-RUN ls -la cookies/ && echo "Cookies directory contents:" && cat cookies/youtube_cookies.txt | head -3
 
 # Create downloads directory and cookies directory
 RUN mkdir -p downloads cookies

@@ -110,16 +110,42 @@ const worker = new Worker(
     ];
     
     // Add cookies if available
-    const cookiesPath = path.join(process.cwd(), "cookies", "youtube_cookies.txt");
-    console.log(`🔍 Looking for cookies at: ${cookiesPath}`);
-    console.log(`📁 Current working directory: ${process.cwd()}`);
-    console.log(`📁 Cookies directory contents:`, fs.readdirSync(path.join(process.cwd(), "cookies")));
+    let cookiesPath = null;
     
-    if (fs.existsSync(cookiesPath)) {
+    // First try environment variable
+    if (process.env.YOUTUBE_COOKIES) {
+      console.log(`🔧 Creating cookies file from environment variable`);
+      cookiesPath = path.join(process.cwd(), "cookies", "youtube_cookies.txt");
+      try {
+        fs.writeFileSync(cookiesPath, process.env.YOUTUBE_COOKIES);
+        console.log(`✅ Cookies file created from environment variable`);
+      } catch (error) {
+        console.log(`❌ Error creating cookies file:`, error.message);
+        cookiesPath = null;
+      }
+    } else {
+      // Try existing file
+      cookiesPath = path.join(process.cwd(), "cookies", "youtube_cookies.txt");
+      console.log(`🔍 Looking for cookies at: ${cookiesPath}`);
+      console.log(`📁 Current working directory: ${process.cwd()}`);
+      
+      try {
+        const cookiesDir = path.join(process.cwd(), "cookies");
+        if (fs.existsSync(cookiesDir)) {
+          console.log(`📁 Cookies directory contents:`, fs.readdirSync(cookiesDir));
+        } else {
+          console.log(`❌ Cookies directory does not exist`);
+        }
+      } catch (error) {
+        console.log(`❌ Error reading cookies directory:`, error.message);
+      }
+    }
+    
+    if (cookiesPath && fs.existsSync(cookiesPath)) {
       console.log(`✅ Cookies file found, adding to yt-dlp arguments`);
       args.push("--cookies", cookiesPath);
     } else {
-      console.log(`❌ Cookies file not found at: ${cookiesPath}`);
+      console.log(`❌ No cookies available, proceeding without authentication`);
     }
     
     if (startTime && endTime) {
