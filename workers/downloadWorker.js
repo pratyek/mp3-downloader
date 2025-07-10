@@ -9,7 +9,50 @@ import express from "express";
 const app = express();
 const PORT = process.env.WORKER_PORT || 5050;
 app.get("/", (req, res) => res.send("Worker is running."));
-app.listen(PORT);
+
+app.listen(PORT, () => {
+  console.log(`🚀 Worker server running on port ${PORT}`);
+});
+
+// Check if yt-dlp is available
+function checkYtDlp() {
+  return new Promise((resolve) => {
+    const check = spawn("which", ["yt-dlp"]);
+    check.on("close", (code) => {
+      if (code === 0) {
+        console.log("✅ yt-dlp is available");
+        resolve(true);
+      } else {
+        console.log("❌ yt-dlp not found, trying alternative installation...");
+        resolve(false);
+      }
+    });
+  });
+}
+
+// Try to install yt-dlp if not available
+async function ensureYtDlp() {
+  const isAvailable = await checkYtDlp();
+  if (!isAvailable) {
+    console.log("🔧 Attempting to install yt-dlp...");
+    try {
+      // Try pip3 install
+      const install = spawn("pip3", ["install", "--user", "yt-dlp"]);
+      install.on("close", (code) => {
+        if (code === 0) {
+          console.log("✅ yt-dlp installed successfully");
+        } else {
+          console.log("❌ Failed to install yt-dlp");
+        }
+      });
+    } catch (error) {
+      console.log("❌ Error installing yt-dlp:", error.message);
+    }
+  }
+}
+
+// Initialize yt-dlp
+ensureYtDlp();
 
 // 🔹 Helper function to update MongoDB progress
 async function updateDownloadRecord(downloadId, updateFields) {

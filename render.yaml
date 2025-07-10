@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: youtube-downloader-backend
+    env: node
+    buildCommand: npm install
+    startCommand: node workers/downloadWorker.js
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: WORKER_PORT
+        value: 5050
+    healthCheckPath: /
+    autoDeploy: true 

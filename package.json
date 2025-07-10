@@ -12,7 +12,8 @@
     "setup": "node setup.js",
     "test-db": "node test-db.js",
     "local-setup": "node local-setup.js",
-    "setup-vercel": "node setup-vercel-deployment.js"
+    "setup-vercel": "node setup-vercel-deployment.js",
+    "postinstall": "if [ -f /etc/alpine-release ]; then apk add --no-cache python3 py3-pip ffmpeg && pip3 install --no-cache-dir yt-dlp; elif command -v apt-get >/dev/null 2>&1; then apt-get update && apt-get install -y python3 python3-pip ffmpeg && pip3 install --no-cache-dir yt-dlp; elif command -v yum >/dev/null 2>&1; then yum install -y python3 python3-pip ffmpeg && pip3 install --no-cache-dir yt-dlp; else echo 'System package manager not supported'; fi"
   },
   "dependencies": {
     "bullmq": "^5.41.7",
