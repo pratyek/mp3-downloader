@@ -1,20 +1,26 @@
 version: "3.8"
 
 services:
-  app:
-    build: .
+  backend-worker:
+    build:
+      context: .
+      dockerfile: dockerfile.backend
     ports:
-      - "3000:3000"
+      - "5050:5050"
     env_file:
       - .env
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - REDIS_URL=${REDIS_URL}
+      - WORKER_PORT=5050
     volumes:
       - ./downloads:/app/downloads
     depends_on:
       - redis
+    restart: unless-stopped
+
   redis:
     image: "redis:alpine"
     ports:
       - "6379:6379"
+    restart: unless-stopped 

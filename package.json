@@ -11,7 +11,8 @@
     "worker": "pip install --user yt-dlp && node workers/downloadWorker.js",
     "setup": "node setup.js",
     "test-db": "node test-db.js",
-    "local-setup": "node local-setup.js"
+    "local-setup": "node local-setup.js",
+    "setup-vercel": "node setup-vercel-deployment.js"
   },
   "dependencies": {
     "bullmq": "^5.41.7",

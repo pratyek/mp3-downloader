@@ -1,0 +1,34 @@
+# Backend Services Dockerfile
+# This runs only the backend services that can't run on Vercel
+
+FROM node:20-alpine
+
+# Install system dependencies
+RUN apk add --no-cache python3 py3-pip ffmpeg
+
+# Install yt-dlp
+RUN pip3 install --no-cache-dir yt-dlp
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy backend-specific files
+COPY lib/ ./lib/
+COPY workers/ ./workers/
+COPY config.js ./
+COPY downloads/ ./downloads/
+
+# Create downloads directory if it doesn't exist
+RUN mkdir -p downloads
+
+# Expose worker port
+EXPOSE 5050
+
+# Start the worker process
+CMD ["node", "workers/downloadWorker.js"] 

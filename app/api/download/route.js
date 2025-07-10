@@ -33,19 +33,20 @@ async function checkVideoExists(url, format) {
 async function createDownloadRecord(url, format, startTime, endTime, downloadId) {
   try {
     const downloads = await getDownloadCollection();
-    const record = {
+    await downloads.insertOne({
+      downloadId,
       url,
       format,
-      downloadId,
+      startTime,
+      endTime,
+      status: 'queued',
       progress: 0,
-      status: 'starting',
-      clipInfo: startTime && endTime ? { startTime, endTime } : null,
       createdAt: new Date(),
-      lastUpdated: new Date()
-    };
-    await downloads.insertOne(record);
+      updatedAt: new Date()
+    });
   } catch (error) {
-    console.error('Failed to create download record in DB:', error);
+    console.error('Failed to create download record:', error);
+    throw error;
   }
 }
 
@@ -92,6 +93,7 @@ export async function POST(req) {
     await createDownloadRecord(url, format, startTime, endTime, downloadId);
     
     // Enqueue a new download job using BullMQ
+    // The backend worker will pick this up from the queue
     await downloadQueue.add('downloadJob', { url, format, startTime, endTime, downloadId });
     
     return NextResponse.json({ downloadId, format, status: 'queued' });

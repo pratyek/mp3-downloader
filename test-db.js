@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+import 'dotenv/config';
+
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
+console.log('REDIS_URL:', process.env.REDIS_URL);
+
 import { getDownloadCollection, closeConnection } from './lib/database.js';
 import { connection as redisConnection } from './lib/redis.js';
 
