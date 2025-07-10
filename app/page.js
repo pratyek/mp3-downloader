@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next';
 
 // Available formats with quality options
 const formats = [
-  { value: 'best[height<=720]', label: '720p' },
-  { value: 'best[height<=480]', label: '480p' },
+  { value: 'worst[height<=480]', label: '480p' },
   { value: 'worst[height<=360]', label: '360p' },
-  { value: 'bestaudio/best', label: 'Audio Only' }
+  { value: 'worst[height<=240]', label: '240p' },
+  { value: 'worstaudio/worst', label: 'Audio Only' }
 ];
 
 export default function Home() {

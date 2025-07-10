@@ -105,6 +105,9 @@ const worker = new Worker(
       "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
       "--sleep-interval", "2",
       "--max-sleep-interval", "5",
+      "--extractor-args", "youtube:player_client=android",
+      "--no-check-certificates",
+      "--prefer-insecure",
       "-f", format, 
       "-o", outputPath
     ];
@@ -158,10 +161,12 @@ const worker = new Worker(
     return new Promise((resolve, reject) => {
       const downloadProcess = spawn("yt-dlp", args); // Use correct path if needed
       let stderrBuffer = "";
+      let stdoutBuffer = "";
 
       // 🔹 Capture progress updates
       downloadProcess.stdout.on("data", async (data) => {
         const output = data.toString();
+        stdoutBuffer += output;
         // Print every line for debugging
         output.split("\n").forEach(line => {
           if (line.trim()) {
