@@ -22,7 +22,6 @@ RUN npm install
 COPY lib/ ./lib/
 COPY workers/ ./workers/
 COPY config.js ./
-COPY downloads/ ./downloads/
 
 # Create downloads directory if it doesn't exist
 RUN mkdir -p downloads
