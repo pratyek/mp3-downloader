@@ -111,8 +111,15 @@ const worker = new Worker(
     
     // Add cookies if available
     const cookiesPath = path.join(process.cwd(), "cookies", "youtube_cookies.txt");
+    console.log(`🔍 Looking for cookies at: ${cookiesPath}`);
+    console.log(`📁 Current working directory: ${process.cwd()}`);
+    console.log(`📁 Cookies directory contents:`, fs.readdirSync(path.join(process.cwd(), "cookies")));
+    
     if (fs.existsSync(cookiesPath)) {
+      console.log(`✅ Cookies file found, adding to yt-dlp arguments`);
       args.push("--cookies", cookiesPath);
+    } else {
+      console.log(`❌ Cookies file not found at: ${cookiesPath}`);
     }
     
     if (startTime && endTime) {
