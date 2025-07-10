@@ -22,9 +22,10 @@ RUN npm install
 COPY lib/ ./lib/
 COPY workers/ ./workers/
 COPY config.js ./
+COPY cookies/ ./cookies/
 
-# Create downloads directory if it doesn't exist
-RUN mkdir -p downloads
+# Create downloads directory and cookies directory
+RUN mkdir -p downloads cookies
 
 # Expose worker port
 EXPOSE 5050

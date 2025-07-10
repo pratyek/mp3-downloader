@@ -54,6 +54,17 @@ async function ensureYtDlp() {
 // Initialize yt-dlp
 ensureYtDlp();
 
+// Create cookies file from environment variable if available
+if (process.env.YOUTUBE_COOKIES) {
+  try {
+    const cookiesPath = path.join(process.cwd(), "cookies", "youtube_cookies.txt");
+    fs.writeFileSync(cookiesPath, process.env.YOUTUBE_COOKIES);
+    console.log("✅ YouTube cookies created from environment variable");
+  } catch (error) {
+    console.log("❌ Error creating cookies file:", error.message);
+  }
+}
+
 // 🔹 Helper function to update MongoDB progress
 async function updateDownloadRecord(downloadId, updateFields) {
   try {
@@ -86,7 +97,24 @@ const worker = new Worker(
     const outputPath = path.join(downloadsDir, outputFilename);
 
     // 🔹 Build yt-dlp arguments
-    const args = ["--verbose", "--newline", "--progress", "--no-warnings", "-f", format, "-o", outputPath];
+    const args = [
+      "--verbose", 
+      "--newline", 
+      "--progress", 
+      "--no-warnings",
+      "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      "--sleep-interval", "2",
+      "--max-sleep-interval", "5",
+      "-f", format, 
+      "-o", outputPath
+    ];
+    
+    // Add cookies if available
+    const cookiesPath = path.join(process.cwd(), "cookies", "youtube_cookies.txt");
+    if (fs.existsSync(cookiesPath)) {
+      args.push("--cookies", cookiesPath);
+    }
+    
     if (startTime && endTime) {
       args.push("--download-sections", `*${startTime}-${endTime}`);
     }
