@@ -7,7 +7,7 @@ import path from "path";
 import express from "express";
 
 const app = express();
-const PORT = process.env.WORKER_PORT || 5050;
+const PORT = process.env.PORT || process.env.WORKER_PORT || 5050;
 app.get("/", (req, res) => res.send("Worker is running."));
 
 app.listen(PORT, () => {
